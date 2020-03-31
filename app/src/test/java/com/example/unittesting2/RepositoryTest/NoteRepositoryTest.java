@@ -34,26 +34,23 @@ import static org.mockito.Mockito.*;
 
 //@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(InstantExecutorInstanceRuleJunit5.class)
-public class NoteRepositoryTest  {
+public class NoteRepositoryTest {
+
+    ///@Mock //************* This Annotation used only for intialization the class purpose...
 
     private Repository NoteRepository;
-    ///@Mock //************* This Annotation used only for intialization the class purpose...
      private DaoInterface NoteDAO;
-   // private NoteDatabaseCreateClass noteDatabaseCreateClass;
-    private Context c1;
+     private Context c1;
     private static final GetterSetter TEST_NOTE_1 = new GetterSetter
             (1,"Take out the trash", "It's garbage day tomorrow.");
 
-    public NoteRepositoryTest(Context c1) {
-        this.c1 = c1;
-    }
 
     @BeforeEach
     public void EachTest()
     {
        // MockitoAnnotations.initMocks(this);
         NoteDAO = mock(DaoInterface.class);
-        NoteRepository = new Repository((android.content.Context) c1);
+        NoteRepository = new Repository(NoteDAO, (android.content.Context) c1);
     }
 
     //// this annotation used when you are making one time instance of all class and then you are making all test
@@ -69,10 +66,10 @@ public class NoteRepositoryTest  {
 
    // }
 
+
     @Test
     void insertNote()throws Exception
     {
-
         final Long insertedRows = 1L;
         final Single<Long> returndata = Single.just(insertedRows);
         when(NoteDAO.insertnote(any(GetterSetter.class))).thenReturn(returndata);
@@ -83,6 +80,7 @@ public class NoteRepositoryTest  {
         assertEquals(Resource.success(1,Insert_Sucess),returnedValue);
 
     }
+
 
     @Test
     void InsertNoteError_Return()throws Exception
@@ -259,5 +257,6 @@ public class NoteRepositoryTest  {
         // Assert
         assertEquals(notes, observedData);
     }
+
 
 }

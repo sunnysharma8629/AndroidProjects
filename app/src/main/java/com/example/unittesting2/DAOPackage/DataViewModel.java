@@ -34,13 +34,16 @@ public class DataViewModel extends ViewModel {
     private boolean isNewNote;
     private Subscription updateSubscription, insertSubscription;
 
+
     @Ignore
     public DataViewModel() {
     }
 
+
     public DataViewModel(Repository noterepository1) {
         this.Noterepository1 = noterepository1;
     }
+
 
     public LiveData<Resource<Integer>> insertdata()throws Exception{
 

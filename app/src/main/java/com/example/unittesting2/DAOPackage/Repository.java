@@ -31,7 +31,6 @@ public class Repository {
     private TimeUnit  t1= TimeUnit.SECONDS;
 
 
-    @NonNull
     private NoteDatabaseCreateClass noteDatabaseCreateClass;
 
     public Repository(Context context) {

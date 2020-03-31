@@ -62,6 +62,9 @@ public class ViewmodelTest {
       notelistViewModel= new NotelistViewModel(Noterepositoyr);
     }
 
+
+    ////////////////////////////These are the ViewModelTests..////////////////////////////////
+
     /*
         can't observe a note that hasn't been set
      */
@@ -132,7 +135,7 @@ public class ViewmodelTest {
         // Act
          viewmodel.setNote(getterSetter3);
         // Assert
-        verify(Noterepositoyr, Mockito.never()).insertdata((GetterSetter)org.mockito.Matchers.any(GetterSetter.class));
+        verify(Noterepositoyr, Mockito.never()).insertdata((GetterSetter)ArgumentMatchers.any(GetterSetter.class));
 
     }
 
@@ -195,7 +198,7 @@ public class ViewmodelTest {
         viewmodel.setNote(getterSetter3);
 
         // Assert
-        verify(Noterepositoyr, Mockito.never()).UpdateData((GetterSetter)org.mockito.Matchers.any(GetterSetter.class));
+        verify(Noterepositoyr, Mockito.never()).UpdateData((GetterSetter)ArgumentMatchers.any(GetterSetter.class));
 
     }
 
@@ -229,12 +232,20 @@ public class ViewmodelTest {
         return list
      */
 
-     /////////////////// plz try to understand this logic///////////////////////////////////////////
+
+     /////////////////// plz try to understand this logic(IgnoreThis)///////////////////////////////////////////
     //1)first of all i will set data into the getter setter type arraylist.
     // or keh le ki assign kardiya data(returndata) type ki arraylist ko...
     // 2)ab data ko observe kra database se or return kra data into returndata mai...
     // 3) Livedatautilclass ne observe kra getter setter class or data ko observe kra or set kar diya data
     // ko observedata type ke refrence variable mai.......
+   /////////////////////////Plz Ignore These Comments////////////////////////////////////////////////////////////
+
+
+
+
+
+       //////////////////// These are the NotelistViewModelTests..//////////////////////////
 
     @Test
     void retrieveNotes_returnNotesList() throws Exception {
