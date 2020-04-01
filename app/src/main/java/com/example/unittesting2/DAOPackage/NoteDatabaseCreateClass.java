@@ -28,7 +28,7 @@ public abstract class NoteDatabaseCreateClass extends RoomDatabase {
         return noteDatabaseCreateClass;
     }
 
-    @NonNull
+
     public abstract DaoInterface getDAOObjects();
 
 }

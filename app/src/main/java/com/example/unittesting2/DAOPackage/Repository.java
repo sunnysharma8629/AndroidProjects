@@ -30,10 +30,12 @@ public class Repository {
     private int TimeDelay = 0;
     private TimeUnit  t1= TimeUnit.SECONDS;
 
-
     private NoteDatabaseCreateClass noteDatabaseCreateClass;
+    @NonNull
+    private DaoInterface NoteDao;
 
-    public Repository(Context context) {
+    public Repository(@NonNull DaoInterface noteDao,Context context) {
+        NoteDao = noteDao;
         noteDatabaseCreateClass = NoteDatabaseCreateClass.getInstance(context);
     }
 
@@ -41,7 +43,7 @@ public class Repository {
     public Flowable<Resource<Integer>> insertdata(final GetterSetter getterSetter)throws Exception {
 
         CheckTitle(getterSetter);
-        return noteDatabaseCreateClass.getDAOObjects().insertnote(getterSetter)
+        return NoteDao.insertnote(getterSetter)
                 .delaySubscription(TimeDelay,t1)
                 .map(new Function<Long,Integer>() {
                     @Override
@@ -73,7 +75,7 @@ public class Repository {
     public Flowable<Resource<Integer>> UpdateData(GetterSetter getterSetter1)throws Exception
     {
         CheckTitle(getterSetter1);
-        return noteDatabaseCreateClass.getDAOObjects().updatenote(getterSetter1)
+        return  NoteDao.updatenote(getterSetter1)
                 .delaySubscription(TimeDelay,t1)
                 .onErrorReturn(new Function<Throwable, Integer>() {
                     @Override
@@ -109,7 +111,7 @@ public class Repository {
         checkId(note);
 
         return LiveDataReactiveStreams.fromPublisher(
-                noteDatabaseCreateClass.getDAOObjects().deletenote(note)
+                NoteDao.deletenote(note)
                         .onErrorReturn(new Function<Throwable, Integer>() {
                             @Override
                             public Integer apply(Throwable throwable) throws Exception {
@@ -131,7 +133,7 @@ public class Repository {
     }
 
     public LiveData<List<GetterSetter>> getNotes(){
-        return noteDatabaseCreateClass.getDAOObjects().GetNotes();
+        return  NoteDao.GetNotes();
     }
 
     private void checkId(GetterSetter note) throws Exception{

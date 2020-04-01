@@ -1,9 +1,12 @@
 package com.example.unittesting2.RepositoryTest;
 
+import android.content.Context;
+
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.unittesting2.DAOPackage.DaoInterface;
 import com.example.unittesting2.DAOPackage.Repository;
+import com.example.unittesting2.DefaultContext;
 import com.example.unittesting2.Models.GetterSetter;
 import com.example.unittesting2.UI.Resource;
 import com.example.unittesting2.Util.InstantExecutorInstanceRuleJunit5;
@@ -12,7 +15,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.function.Executable;
-import org.junit.jupiter.params.shadow.com.univocity.parsers.common.Context;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,9 +32,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
+          ///////////////////Plz Ignore these Comments (@Mitch)////////////////////////////
 //This Annotiation used only with BeforeAll Annotiation....
-
 //@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+
+
 @ExtendWith(InstantExecutorInstanceRuleJunit5.class)
 public class NoteRepositoryTest {
 
@@ -40,7 +44,8 @@ public class NoteRepositoryTest {
 
     private Repository NoteRepository;
      private DaoInterface NoteDAO;
-     private Context c1;
+     //private Context c1;
+    private static Context context = DefaultContext.getAppContext();
     private static final GetterSetter TEST_NOTE_1 = new GetterSetter
             (1,"Take out the trash", "It's garbage day tomorrow.");
 
@@ -50,9 +55,10 @@ public class NoteRepositoryTest {
     {
        // MockitoAnnotations.initMocks(this);
         NoteDAO = mock(DaoInterface.class);
-        NoteRepository = new Repository(NoteDAO, (android.content.Context) c1);
+        NoteRepository = new Repository(NoteDAO, context);
     }
 
+                    //////Plz Ignore This///////////////////////
     //// this annotation used when you are making one time instance of all class and then you are making all test
     //  and all test using same instance.........//////////////////
 
@@ -257,6 +263,7 @@ public class NoteRepositoryTest {
         // Assert
         assertEquals(notes, observedData);
     }
+
 
 
 }
