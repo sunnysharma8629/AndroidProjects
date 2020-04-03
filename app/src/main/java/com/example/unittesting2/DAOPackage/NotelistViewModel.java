@@ -1,5 +1,9 @@
 package com.example.unittesting2.DAOPackage;
 
+import android.app.Application;
+
+import androidx.annotation.NonNull;
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.Observer;
@@ -11,18 +15,17 @@ import com.example.unittesting2.UI.Resource;
 
 import java.util.List;
 
-public class NotelistViewModel extends ViewModel {
+public class NotelistViewModel extends AndroidViewModel {
 
     private Repository notelistrepository;
 
     private MediatorLiveData<List<GetterSetter>> notes = new MediatorLiveData<>();
 
-    @Ignore
-    public NotelistViewModel() {
-    }
 
-    public NotelistViewModel(Repository notelistrepository) {
-        this.notelistrepository = notelistrepository;
+    public NotelistViewModel(@NonNull Application application) {
+        super(application);
+        notelistrepository = Repository.getInstance(application);
+
     }
 
     public LiveData<Resource<Integer>> deleteNote(final GetterSetter note) throws Exception{

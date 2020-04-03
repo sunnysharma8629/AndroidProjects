@@ -45,7 +45,7 @@ public class NoteRepositoryTest {
     private Repository NoteRepository;
      private DaoInterface NoteDAO;
      //private Context c1;
-    private static Context context = DefaultContext.getAppContext();
+
     private static final GetterSetter TEST_NOTE_1 = new GetterSetter
             (1,"Take out the trash", "It's garbage day tomorrow.");
 
@@ -55,7 +55,7 @@ public class NoteRepositoryTest {
     {
        // MockitoAnnotations.initMocks(this);
         NoteDAO = mock(DaoInterface.class);
-        NoteRepository = new Repository(NoteDAO, context);
+       // NoteRepository = new Repository(NoteDAO);
     }
 
                     //////Plz Ignore This///////////////////////

@@ -3,7 +3,7 @@ package com.example.unittesting2.ViewModelFactoryModule;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.unittesting2.DAOPackage.DataViewModel;
+import com.example.unittesting2.DAOPackage.NoteViewModel;
 import com.example.unittesting2.DAOPackage.NotelistViewModel;
 
 import dagger.Binds;
@@ -18,8 +18,8 @@ public abstract class ViewModelFactoryModule {
 
     @Binds
     @IntoMap
-    @ViewModelKeyProvider(DataViewModel.class)
-    public abstract ViewModel bindNoteViewModel(DataViewModel noteViewModel);
+    @ViewModelKeyProvider(NoteViewModel.class)
+    public abstract ViewModel bindNoteViewModel(NoteViewModel noteViewModel);
 
     @Binds
     @IntoMap

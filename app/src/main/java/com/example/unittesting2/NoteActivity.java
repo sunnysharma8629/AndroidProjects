@@ -19,15 +19,11 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toolbar;
 
-import com.example.unittesting2.DAOPackage.DataViewModel;
+import com.example.unittesting2.DAOPackage.NoteViewModel;
 import com.example.unittesting2.Models.GetterSetter;
 import com.example.unittesting2.UI.Resource;
-import com.example.unittesting2.ViewModelFactoryModule.ViewModelProviderFactory;
 import com.google.android.material.snackbar.Snackbar;
-
-import javax.inject.Inject;
 
 public class NoteActivity extends AppCompatActivity implements GestureDetector.OnGestureListener,
         GestureDetector.OnDoubleTapListener,View.OnTouchListener,View.OnClickListener, TextWatcher {
@@ -38,7 +34,7 @@ public class NoteActivity extends AppCompatActivity implements GestureDetector.O
     private TextView  textviewtoolbar;
     private RelativeLayout backarrowcontainer,checkcontainr;
     ImageButton image1,image2;
-    DataViewModel viewModel;
+    NoteViewModel viewModel;
     private GestureDetector mGestureDetector;
     private static final String TAG = "NoteActivity";
 
@@ -57,7 +53,8 @@ public class NoteActivity extends AppCompatActivity implements GestureDetector.O
         image1 = findViewById(R.id.toolbar_back_arrow);
         image2 = findViewById(R.id.toolbar_check);
 
-        viewModel = ViewModelProviders.of(this).get(DataViewModel.class);
+
+        viewModel = ViewModelProviders.of(this).get(NoteViewModel.class);
 
         subscribeObservers();
         setListeners();
@@ -81,7 +78,7 @@ public class NoteActivity extends AppCompatActivity implements GestureDetector.O
                 viewModel.setIsNewNote(false);
             }
             else{
-                getterSetterObject = new GetterSetter(1, "Title", "This is the NoteContent");
+                getterSetterObject = new GetterSetter("Title", "");
                 viewModel.setIsNewNote(true);
             }
             viewModel.setNote(getterSetterObject);
@@ -89,6 +86,21 @@ public class NoteActivity extends AppCompatActivity implements GestureDetector.O
             e.printStackTrace();
             showSnackBar(getString(R.string.error_intent_note));
         }
+    }
+
+    private void setListeners(){
+        mGestureDetector = new GestureDetector(this, this);
+        TestBox.setOnTouchListener(this);
+        image2.setOnClickListener(this);
+        textviewtoolbar.setOnClickListener(this);
+        image1.setOnClickListener(this);
+        toolbarEdittext.addTextChangedListener(this);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean("has_started", true);
     }
 
 
@@ -102,18 +114,19 @@ public class NoteActivity extends AppCompatActivity implements GestureDetector.O
             }
         });
 
-        viewModel.observeViewState().observe(this, new Observer<DataViewModel.ViewState>() {
+        viewModel.observeViewState().observe(this, new Observer<NoteViewModel.ViewState>() {
             @Override
-            public void onChanged(DataViewModel.ViewState viewState) {
+            public void onChanged(NoteViewModel.ViewState viewState) {
                 switch (viewState){
-                    case EDIT:{
-                        enableContentInteraction();
-                        break;
-                    }
                     case VIEW:{
                         disableContentInteraction();
                         break;
                     }
+                    case EDIT:{
+                        enableContentInteraction();
+                        break;
+                    }
+
                 }
             }
         });
@@ -135,40 +148,29 @@ public class NoteActivity extends AppCompatActivity implements GestureDetector.O
 
     private void enableEditMode(){
         Log.d(TAG, "enableEditMode: called.");
-        viewModel.setViewState(DataViewModel.ViewState.EDIT);
+        viewModel.setViewState(NoteViewModel.ViewState.EDIT);
     }
 
     /////////ths method is used to insert & update the note into database/////////////////////////
     private void disableEditMode(){
         Log.d(TAG, "disableEditMode: called.");
-        viewModel.setViewState(DataViewModel.ViewState.VIEW);
+        viewModel.setViewState(NoteViewModel.ViewState.VIEW);
 
         if(!TextUtils.isEmpty(TestBox.getText())){
             try {
                 viewModel.updateNote1(toolbarEdittext.getText().toString(), TestBox.getText().toString());
+                saveNote();
             } catch (Exception e) {
                 e.printStackTrace();
-                showSnackBar("Error setting note properties");
+                showSnackBar("Plz fill all field to save note");
             }
         }
+        else {
+            showSnackBar("Plz enter All fields to save note");
+        }
 
-        saveNote();
     }
 
-    private void setListeners(){
-        mGestureDetector = new GestureDetector(this, this);
-        TestBox.setOnTouchListener(this);
-        image2.setOnClickListener(this);
-        textviewtoolbar.setOnClickListener(this);
-        image1.setOnClickListener(this);
-        toolbarEdittext.addTextChangedListener(this);
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putBoolean("has_started", true);
-    }
 
     private void showSnackBar(String message){
         if(!TextUtils.isEmpty(message)) {

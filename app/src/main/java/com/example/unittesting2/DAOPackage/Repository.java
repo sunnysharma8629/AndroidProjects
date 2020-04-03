@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.LiveDataReactiveStreams;
 
+import com.example.unittesting2.DefaultContext;
 import com.example.unittesting2.Models.GetterSetter;
 import com.example.unittesting2.UI.Resource;
 
@@ -25,18 +26,26 @@ public class Repository {
     public static final String DELETE_SUCCESS = "Delete success";
     public static final String DELETE_FAILURE = "Delete failure";
     public static final String INVALID_NOTE_ID = "Invalid id. Can't delete note";
-    public static final String NOTE_TITLE_NULL = "Note title cannot be null";
+    public static final String NOTE_TITLE_NULL = "All_fields_are_Mendiatory";
 
     private int TimeDelay = 0;
     private TimeUnit  t1= TimeUnit.SECONDS;
+    ////This the memory leaks????
 
-    private NoteDatabaseCreateClass noteDatabaseCreateClass;
+    private static Repository instance;
     @NonNull
     private DaoInterface NoteDao;
 
-    public Repository(@NonNull DaoInterface noteDao,Context context) {
-        NoteDao = noteDao;
-        noteDatabaseCreateClass = NoteDatabaseCreateClass.getInstance(context);
+    static Repository getInstance(Context context){
+        if(instance == null){
+            instance = new Repository(context);
+        }
+        return instance;
+    }
+
+
+    private Repository(Context context) {
+        NoteDao = NoteDatabaseCreateClass.getInstance(context).getDAOObjects();
     }
 
 
@@ -90,7 +99,8 @@ public class Repository {
                         {
                             return Resource.success(integer,Insert_Update);
                         }
-                        return Resource.error(integer,Update_Failure);
+
+                        return Resource.error(null,Update_Failure);
                     }
                 })
                 .subscribeOn(Schedulers.io())
@@ -100,7 +110,7 @@ public class Repository {
 
 
     private void CheckTitle(GetterSetter getterSetter)throws Exception{
-        if (getterSetter.getTitle()== null) {
+        if (getterSetter.getTitle()== null||getterSetter.getTimestamp()== null) {
             throw new Exception(NOTE_TITLE_NULL);
         }
     }

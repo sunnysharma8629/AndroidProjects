@@ -1,5 +1,9 @@
 package com.example.unittesting2.DAOPackage;
 
+import android.app.Application;
+
+import androidx.annotation.NonNull;
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.LiveDataReactiveStreams;
 import androidx.lifecycle.MediatorLiveData;
@@ -15,40 +19,37 @@ import com.example.unittesting2.Util.NoteInsertUpdateHelper;
 import org.reactivestreams.Subscription;
 
 import java.util.List;
+import java.util.Objects;
 
 import io.reactivex.functions.Consumer;
 
 import static android.content.Intent.ACTION_INSERT;
 
-public class DataViewModel extends ViewModel {
+public class NoteViewModel extends AndroidViewModel {
 
     private static final String TAG = "NoteViewModel";
     public static final String NO_CONTENT_ERROR = "Can't save note with no content";
 
     public enum ViewState {VIEW, EDIT}
-    private  Repository Noterepository1;
-    private MutableLiveData<GetterSetter> note  = new MutableLiveData<>();
+   // private MutableLiveData<GetterSetter> note  = new MutableLiveData<>();
     private MutableLiveData<GetterSetter> gettersetter = new MutableLiveData<>();
     private MutableLiveData<ViewState> viewState = new MutableLiveData<>();
-    private MediatorLiveData<List<GetterSetter>> notes = new MediatorLiveData<>();
+    //private MediatorLiveData<List<GetterSetter>> notes = new MediatorLiveData<>();
     private boolean isNewNote;
     private Subscription updateSubscription, insertSubscription;
+    private Repository repository;
 
 
-    @Ignore
-    public DataViewModel() {
+    public NoteViewModel(@NonNull Application application) {
+        super(application);
+        repository = Repository.getInstance(application);
+
     }
-
-
-    public DataViewModel(Repository noterepository1) {
-        this.Noterepository1 = noterepository1;
-    }
-
 
     public LiveData<Resource<Integer>> insertdata()throws Exception{
 
         return LiveDataReactiveStreams.fromPublisher
-                (Noterepository1.insertdata(gettersetter.getValue())
+                (repository.insertdata(gettersetter.getValue())
                 .doOnSubscribe(new Consumer<Subscription>() {
                     @Override
                     public void accept(Subscription subscription) throws Exception {
@@ -62,7 +63,7 @@ public class DataViewModel extends ViewModel {
     public LiveData<Resource<Integer>> updatenote()throws Exception
     {
         return LiveDataReactiveStreams.fromPublisher
-                (Noterepository1.UpdateData(gettersetter.getValue())
+                (repository.UpdateData(gettersetter.getValue())
                  .doOnSubscribe(new Consumer<Subscription>() {
                  @Override
                    public void accept(Subscription subscription) throws Exception {
@@ -76,6 +77,19 @@ public class DataViewModel extends ViewModel {
     public LiveData<GetterSetter> observenote()
     {
         return gettersetter;
+    }
+
+
+    public LiveData<ViewState> observeViewState(){
+        return viewState;
+    }
+
+    public void setViewState(ViewState viewState){
+        this.viewState.setValue(viewState);
+    }
+
+    public void setIsNewNote(boolean isNewNote){
+        this.isNewNote = isNewNote;
     }
 
     public void setNote(GetterSetter getterSetter1)throws Exception
@@ -103,17 +117,7 @@ public class DataViewModel extends ViewModel {
         }
     }
 
-    public LiveData<ViewState> observeViewState(){
-        return viewState;
-    }
 
-    public void setViewState(ViewState viewState){
-        this.viewState.setValue(viewState);
-    }
-
-    public void setIsNewNote(boolean isNewNote){
-        this.isNewNote = isNewNote;
-    }
 
     public LiveData<Resource<Integer>> saveNote() throws Exception{
 
@@ -122,7 +126,7 @@ public class DataViewModel extends ViewModel {
         }
         cancelPendingTransactions();
 
-          return new NoteInsertUpdateHelper<Integer>(){
+        return new NoteInsertUpdateHelper<Integer>(){
 
             @Override
             public void setNoteId(int noteId) {
@@ -181,7 +185,7 @@ public class DataViewModel extends ViewModel {
 
     private boolean shouldAllowSave() throws Exception{
         try{
-            return removeWhiteSpace(gettersetter.getValue().getTimestamp()).length() > 0;
+            return removeWhiteSpace((gettersetter.getValue()).getTimestamp()).length() > 0;
         }catch (NullPointerException e){
             throw new Exception(NO_CONTENT_ERROR);
         }

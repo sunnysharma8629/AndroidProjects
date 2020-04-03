@@ -1,10 +1,14 @@
 package com.example.unittesting2.ViewModelTest;
 
+import android.app.Application;
+import android.content.Context;
+
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.unittesting2.DAOPackage.DataViewModel;
+import com.example.unittesting2.DAOPackage.NoteViewModel;
 import com.example.unittesting2.DAOPackage.NotelistViewModel;
 import com.example.unittesting2.DAOPackage.Repository;
+import com.example.unittesting2.DefaultContext;
 import com.example.unittesting2.Models.GetterSetter;
 import com.example.unittesting2.UI.Resource;
 import com.example.unittesting2.Util.InstantExecutorInstanceRuleJunit5;
@@ -18,7 +22,6 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.mockito.verification.VerificationMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,38 +31,34 @@ import io.reactivex.internal.operators.single.SingleToFlowable;
 import unittesting2.LivedataTestingClass;
 import unittesting2.TestiingValues;
 
-import static com.example.unittesting2.DAOPackage.DataViewModel.NO_CONTENT_ERROR;
+import static com.example.unittesting2.DAOPackage.NoteViewModel.NO_CONTENT_ERROR;
 import static com.example.unittesting2.DAOPackage.Repository.DELETE_FAILURE;
 import static com.example.unittesting2.DAOPackage.Repository.DELETE_SUCCESS;
-import static io.reactivex.Observable.never;
-import static org.hamcrest.core.IsInstanceOf.any;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static unittesting2.TestiingValues.TEST_NOTE_1;
 
 @ExtendWith(InstantExecutorInstanceRuleJunit5.class)
-public class ViewmodelTest {
+public class NoteViewmodelTest {
 
 
     public static final String Insert_Sucess="data-inserted";
     public static final String Insert_Failure="data-inserted2";
     public static final String Update_Data ="Data will be updated";
     public static final String No_Content_Error ="no error in data";
-    private DataViewModel viewmodel;
+    private NoteViewModel viewmodel;
     private NotelistViewModel notelistViewModel;
+    public Context context = DefaultContext.getAppContext();
 
-    @Mock
-    private Repository Noterepositoyr;
 
     @BeforeEach
     public void init()
     {
-      MockitoAnnotations.initMocks(this);
-      viewmodel = new DataViewModel(Noterepositoyr);
-      notelistViewModel= new NotelistViewModel(Noterepositoyr);
+     // MockitoAnnotations.initMocks(this);
+      viewmodel = new NoteViewModel((Application) context);
+      //notelistViewModel= new NotelistViewModel(Noterepositoyr);
     }
 
 
@@ -111,7 +110,7 @@ public class ViewmodelTest {
         LivedataTestingClass<Resource<Integer>> liveDataTestingclass = new LivedataTestingClass<>();
         final int insertedRow = 1;
         Flowable<Resource<Integer>> returnedData = SingleToFlowable.just(Resource.success(insertedRow,Insert_Sucess));
-        when(Noterepositoyr.insertdata((GetterSetter)ArgumentMatchers.any(GetterSetter.class))).thenReturn(returnedData);
+       // when(Noterepositoyr.insertdata((GetterSetter)ArgumentMatchers.any(GetterSetter.class))).thenReturn(returnedData);
         // Act//
         viewmodel.setNote(getterSetter2);
         viewmodel.setIsNewNote(true);
@@ -135,7 +134,7 @@ public class ViewmodelTest {
         // Act
          viewmodel.setNote(getterSetter3);
         // Assert
-        verify(Noterepositoyr, Mockito.never()).insertdata((GetterSetter)ArgumentMatchers.any(GetterSetter.class));
+        //verify(Noterepositoyr, Mockito.never()).insertdata((GetterSetter)ArgumentMatchers.any(GetterSetter.class));
 
     }
 
@@ -175,7 +174,7 @@ public class ViewmodelTest {
         LivedataTestingClass<Resource<Integer>> liveDataTestingclass = new LivedataTestingClass<>();
         final int UpdateRow = 1;
         Flowable<Resource<Integer>> returnedData = SingleToFlowable.just(Resource.success(UpdateRow,Update_Data));
-        when(Noterepositoyr.UpdateData((GetterSetter)ArgumentMatchers.any(GetterSetter.class))).thenReturn(returnedData);
+       // when(Noterepositoyr.UpdateData((GetterSetter)ArgumentMatchers.any(GetterSetter.class))).thenReturn(returnedData);
         // Act//
         viewmodel.setNote(getterSetter2);
         viewmodel.setIsNewNote(false);
@@ -198,7 +197,7 @@ public class ViewmodelTest {
         viewmodel.setNote(getterSetter3);
 
         // Assert
-        verify(Noterepositoyr, Mockito.never()).UpdateData((GetterSetter)ArgumentMatchers.any(GetterSetter.class));
+       // verify(Noterepositoyr, Mockito.never()).UpdateData((GetterSetter)ArgumentMatchers.any(GetterSetter.class));
 
     }
 
@@ -254,7 +253,7 @@ public class ViewmodelTest {
         LivedataTestingClass<List<GetterSetter>> liveDataTestUtil = new LivedataTestingClass<>();
         MutableLiveData<List<GetterSetter>> returnedValue = new MutableLiveData<>();
         returnedValue.setValue(returnedData);
-        when(Noterepositoyr.getNotes()).thenReturn(returnedValue);
+        //when(Noterepositoyr.getNotes()).thenReturn(returnedValue);
 
         // Act
         notelistViewModel.getNotes();
@@ -276,7 +275,7 @@ public class ViewmodelTest {
         LivedataTestingClass<List<GetterSetter>> liveDataTestUtil = new LivedataTestingClass<>();
         MutableLiveData<List<GetterSetter>> returnedValue = new MutableLiveData<>();
         returnedValue.setValue(returnedData);
-        when(Noterepositoyr.getNotes()).thenReturn(returnedValue);
+       // when(Noterepositoyr.getNotes()).thenReturn(returnedValue);
 
         // Act
         notelistViewModel.getNotes();
@@ -302,7 +301,7 @@ public class ViewmodelTest {
         LivedataTestingClass<Resource<Integer>> liveDataTestUtil = new LivedataTestingClass<>();
         MutableLiveData<Resource<Integer>> returnedValue = new MutableLiveData<>();
         returnedValue.setValue(returnedData);
-        when(Noterepositoyr.deleteNote((GetterSetter)ArgumentMatchers.any(GetterSetter.class))).thenReturn(returnedValue);
+        //when(Noterepositoyr.deleteNote((GetterSetter)ArgumentMatchers.any(GetterSetter.class))).thenReturn(returnedValue);
 
         // Act
         Resource<Integer> observedValue = liveDataTestUtil.getValue(notelistViewModel.deleteNote(deletedNote));
@@ -324,7 +323,7 @@ public class ViewmodelTest {
         LivedataTestingClass<Resource<Integer>> liveDataTestUtil = new LivedataTestingClass<>();
         MutableLiveData<Resource<Integer>> returnedValue = new MutableLiveData<>();
         returnedValue.setValue(returnedData);
-        when(Noterepositoyr.deleteNote((GetterSetter)ArgumentMatchers.any(GetterSetter.class))).thenReturn(returnedValue);
+       // when(Noterepositoyr.deleteNote((GetterSetter)ArgumentMatchers.any(GetterSetter.class))).thenReturn(returnedValue);
 
         // Act
         Resource<Integer> observedValue = liveDataTestUtil.getValue(notelistViewModel.deleteNote(deletedNote));

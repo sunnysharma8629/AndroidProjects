@@ -1,6 +1,8 @@
 package com.example.unittesting2.Models;
 
+
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
@@ -23,7 +25,7 @@ public class GetterSetter implements Serializable {
     @ColumnInfo(name = "Timestamp")
     private String timestamp;
 
-    public GetterSetter(String title, String timestamp) {
+    public GetterSetter(@NonNull String title, String timestamp) {
         this.title = title;
         this.timestamp = timestamp;
     }
@@ -56,11 +58,12 @@ public class GetterSetter implements Serializable {
         this.id = id;
     }
 
+    @NonNull
     public String getTitle() {
         return title;
     }
 
-    public void setTitle(String title) {
+    public void setTitle(@NonNull String title) {
         this.title = title;
     }
 

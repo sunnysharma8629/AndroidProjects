@@ -5,22 +5,18 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.GestureDetector;
 import android.view.View;
 
 import com.example.unittesting2.Adapter.NoteAdapter;
-import com.example.unittesting2.DAOPackage.DataViewModel;
 import com.example.unittesting2.DAOPackage.NotelistViewModel;
 import com.example.unittesting2.Models.GetterSetter;
 import com.example.unittesting2.UI.Resource;
